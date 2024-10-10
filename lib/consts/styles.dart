@@ -11,6 +11,7 @@ const largeBorderRadius = 90.0;
 const smallIconSize = 26.0;
 const mediumIconSize = 32.0;
 const largeIconSize = 46.0;
+const extraLargeIconSize = 56.0;
 const navBarIconSize = 20.0;
 
 //margins and paddings

@@ -8,16 +8,39 @@ import 'package:permission_handler/permission_handler.dart';
 
 class AudioPlayerController extends GetxController {
   final OnAudioQuery audioQuery = OnAudioQuery();
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer audioPlayer = AudioPlayer();
 
   RxInt playIndex = 0.obs;
 
   RxBool isPlaying = false.obs;
 
+  var duration = ''.obs;
+  var position = ''.obs;
+
+  var max = 0.0.obs;
+  var value = 0.0.obs;
+
   @override
   void onInit() {
     super.onInit();
     _requestPermissions();
+  }
+
+  updatePosition() {
+    audioPlayer.durationStream.listen((d) {
+      duration.value = d.toString().split(".")[0];
+      max.value = d!.inSeconds.toDouble();
+    });
+
+    audioPlayer.positionStream.listen((p) {
+      position.value = p.toString().split(".")[0];
+      value.value = p.inSeconds.toDouble();
+    });
+  }
+
+  changeDurationToseconds(seconds) {
+    var duration = Duration(seconds: seconds);
+    audioPlayer.seek(duration);
   }
 
   //handle permission for accessing audio and video
@@ -54,9 +77,10 @@ class AudioPlayerController extends GetxController {
   playSong({String? uri, index}) {
     playIndex.value = index;
     try {
-      _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
-      _audioPlayer.play();
+      audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
+      audioPlayer.play();
       isPlaying(true);
+      updatePosition();
     } on Exception catch (e) {
       if (kDebugMode) {
         print("PLAY_SONG_ERROR: ${e.toString()}");

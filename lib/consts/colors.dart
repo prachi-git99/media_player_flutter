@@ -5,7 +5,7 @@ const Color white = Colors.white;
 const Color black = Colors.black;
 const Color transparent = Colors.transparent;
 
-const Color bgColor = Color.fromRGBO(232, 229, 229, 1.0);
+const Color bgColor = Color.fromRGBO(250, 250, 250, 1.0);
 const Color glassWhite = Color.fromRGBO(232, 232, 232, 0.5882352941176471);
 
 //blue

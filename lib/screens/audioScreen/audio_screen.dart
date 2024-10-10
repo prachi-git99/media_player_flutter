@@ -3,6 +3,7 @@ import 'package:media_player/common_widgets/custom_appbar_widget.dart';
 import 'package:media_player/consts/consts.dart';
 import 'package:media_player/consts/text_style.dart';
 import 'package:media_player/controllers/audio_player_controller.dart';
+import 'package:media_player/screens/audioScreen/audioPlayerScreen/audio_player_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _AudioScreenState extends State<AudioScreen> {
                       return Container(
                         margin: const EdgeInsets.only(top: smallMargin),
                         decoration: BoxDecoration(
-                            color: Colors.grey.shade50,
+                            color: bgColor,
                             boxShadow: const [
                               BoxShadow(
                                 color: darkGrey,
@@ -96,6 +97,7 @@ class _AudioScreenState extends State<AudioScreen> {
                                   )
                                 : null,
                             onTap: () {
+                              Get.to(AudioPlayerScreen(data: data));
                               controller.playSong(
                                   uri: data[index].uri, index: index);
                             },
