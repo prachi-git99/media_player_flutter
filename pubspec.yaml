@@ -18,6 +18,7 @@ dependencies:
   on_audio_query: ^2.9.0
   permission_handler: ^11.3.1
   file_picker: ^5.2.3
+  music_visualizer: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -32,7 +33,9 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
+  assets:
+    - assets/
+    - assets/gifs/
 
 
   fonts:

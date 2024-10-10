@@ -38,11 +38,11 @@ class _AudioScreenState extends State<AudioScreen> {
             return const Center(child: Text("No Songs Found"));
           }
           var data = snapshot.data!;
+
           return Column(
             children: [
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(gradient: bgGradient),
                   padding: const EdgeInsets.symmetric(
                     horizontal: appHorizontalPadding,
                   ),

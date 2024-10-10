@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:media_player/consts/consts.dart';
 import 'package:media_player/consts/text_style.dart';
 import 'package:media_player/controllers/audio_player_controller.dart';
+import 'package:music_visualizer/music_visualizer.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioPlayerScreen extends StatelessWidget {
@@ -12,6 +13,7 @@ class AudioPlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var controller = Get.find<AudioPlayerController>();
+    controller.songs.assignAll(data);
     return Scaffold(
       appBar: AppBar(),
       body: Container(
@@ -20,10 +22,8 @@ class AudioPlayerScreen extends StatelessWidget {
         child: Column(
           children: [
             Obx(
-              () => Expanded(
-                  child: Container(
+              () => Container(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                alignment: Alignment.center,
                 height: size.width * 0.8,
                 width: size.width * 0.8,
                 decoration:
@@ -40,7 +40,7 @@ class AudioPlayerScreen extends StatelessWidget {
                       radius: size.width * 0.2,
                       child: Transform.scale(
                         scale: 2.0,
-                        child: Icon(
+                        child: const Icon(
                           Icons.music_note_rounded,
                           size: extraLargeIconSize, // Set the size of the icon
                           color: white,
@@ -49,25 +49,12 @@ class AudioPlayerScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              )),
+              ),
             ),
-            const SizedBox(height: largeMargin),
             Expanded(
                 child: Container(
               padding: const EdgeInsets.all(mediumPadding),
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                  color: bgColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: darkGrey,
-                      spreadRadius: 0.2, // Spread radius
-                      blurRadius: 2, // Blur radius
-                      offset: Offset(1, 2),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(smallBorderRadius))),
               child: Obx(
                 () => Column(
                   children: [
@@ -100,8 +87,9 @@ class AudioPlayerScreen extends StatelessWidget {
                               child: Slider(
                                   thumbColor: primaryColor,
                                   activeColor: primaryColor,
-                                  min:
-                                      Duration(seconds: 0).inSeconds.toDouble(),
+                                  min: const Duration(seconds: 0)
+                                      .inSeconds
+                                      .toDouble(),
                                   max: controller.max.value,
                                   value: controller.value.value,
                                   onChanged: (newValue) {
@@ -144,12 +132,12 @@ class AudioPlayerScreen extends StatelessWidget {
                                 }
                               },
                               icon: controller.isPlaying.value
-                                  ? Icon(
+                                  ? const Icon(
                                       Icons.pause_circle,
                                       color: primaryColor,
                                       size: extraLargeIconSize,
                                     )
-                                  : Icon(
+                                  : const Icon(
                                       Icons.play_circle_filled_rounded,
                                       color: primaryColor,
                                       size: extraLargeIconSize,
@@ -170,7 +158,20 @@ class AudioPlayerScreen extends StatelessWidget {
                               color: primaryColor,
                             )),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 3 * largeMargin),
+                    Obx(() => controller.isPlaying.value
+                        ? const MusicVisualizer(
+                            barCount: 30,
+                            colors: [
+                              primaryColor,
+                              secondaryColor,
+                              primaryColor,
+                              secondaryColor,
+                            ],
+                            duration: [900, 700, 600, 800, 500],
+                          )
+                        : Container(color: primaryColor, height: 2))
                   ],
                 ),
               ),

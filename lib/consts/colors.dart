@@ -20,8 +20,8 @@ const themeGradient = LinearGradient(
     end: Alignment.bottomRight);
 
 const bgGradient = LinearGradient(colors: [
-  Color.fromRGBO(252, 252, 252, 0.49411764705882355),
-  Color.fromRGBO(252, 252, 252, 0.49411764705882355),
+  Color.fromRGBO(166, 166, 166, 0.49411764705882355),
+  Color.fromRGBO(213, 212, 212, 0.5882352941176471),
   white
 ], begin: Alignment.bottomCenter, end: Alignment.center);
 

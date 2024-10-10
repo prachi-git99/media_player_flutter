@@ -11,19 +11,20 @@ class AudioPlayerController extends GetxController {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   RxInt playIndex = 0.obs;
-
   RxBool isPlaying = false.obs;
 
   var duration = ''.obs;
   var position = ''.obs;
-
   var max = 0.0.obs;
   var value = 0.0.obs;
+
+  late final RxList<SongModel> songs = <SongModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     _requestPermissions();
+    _listenForSongCompletion();
   }
 
   updatePosition() {
@@ -43,7 +44,6 @@ class AudioPlayerController extends GetxController {
     audioPlayer.seek(duration);
   }
 
-  //handle permission for accessing audio and video
   _requestPermissions() async {
     if (Platform.isAndroid) {
       if ((await Permission.audio.request().isGranted ||
@@ -51,7 +51,7 @@ class AudioPlayerController extends GetxController {
           await Permission.videos.request().isGranted) {
         Get.snackbar(
           "Permission Granted",
-          "Welcome to your ad free Media Player",
+          "Welcome to your ad-free Media Player",
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
@@ -64,7 +64,6 @@ class AudioPlayerController extends GetxController {
     }
   }
 
-  //to display song duration
   String formatDuration(int? duration) {
     if (duration == null) return "00:00";
     Duration d = Duration(milliseconds: duration);
@@ -74,10 +73,10 @@ class AudioPlayerController extends GetxController {
     return "$minutes:$seconds";
   }
 
-  playSong({String? uri, index}) {
+  playSong({String? uri, required int index}) async {
     playIndex.value = index;
     try {
-      audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
+      await audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
       audioPlayer.play();
       isPlaying(true);
       updatePosition();
@@ -85,6 +84,31 @@ class AudioPlayerController extends GetxController {
       if (kDebugMode) {
         print("PLAY_SONG_ERROR: ${e.toString()}");
       }
+    }
+  }
+
+  _listenForSongCompletion() {
+    audioPlayer.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        _playNextSong();
+      }
+    });
+  }
+
+  _playNextSong() {
+    if (playIndex.value < songs.length - 1) {
+      // Increment the index and play the next song
+      playIndex.value += 1;
+      playSong(uri: songs[playIndex.value].uri, index: playIndex.value);
+    } else {
+      // Stop the player after the last song (5th song)
+      audioPlayer.stop();
+      isPlaying(false);
+      Get.snackbar(
+        "Playback Finished",
+        "All songs in the playlist have been played.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 }
