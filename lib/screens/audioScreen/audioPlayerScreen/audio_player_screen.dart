@@ -103,6 +103,20 @@ class AudioPlayerScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: smallMargin),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: controller.isRepeating.value
+                            ? const Icon(Icons.repeat_one,
+                                size: mediumIconSize, color: primaryColor)
+                            : const Icon(Icons.repeat,
+                                size: mediumIconSize, color: primaryColor),
+                        onPressed: () {
+                          controller.isRepeating.value =
+                              !controller.isRepeating.value;
+                        },
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -135,12 +149,12 @@ class AudioPlayerScreen extends StatelessWidget {
                                   ? const Icon(
                                       Icons.pause_circle,
                                       color: primaryColor,
-                                      size: extraLargeIconSize,
+                                      size: 65.0,
                                     )
                                   : const Icon(
                                       Icons.play_circle_filled_rounded,
                                       color: primaryColor,
-                                      size: extraLargeIconSize,
+                                      size: 65.0,
                                     )),
                         ),
                         IconButton(

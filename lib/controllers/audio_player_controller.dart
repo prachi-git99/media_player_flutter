@@ -18,6 +18,8 @@ class AudioPlayerController extends GetxController {
   var max = 0.0.obs;
   var value = 0.0.obs;
 
+  RxBool isRepeating = false.obs;
+
   late final RxList<SongModel> songs = <SongModel>[].obs;
 
   @override
@@ -88,9 +90,14 @@ class AudioPlayerController extends GetxController {
   }
 
   _listenForSongCompletion() {
-    audioPlayer.playerStateStream.listen((state) {
-      if (state.processingState == ProcessingState.completed) {
-        _playNextSong();
+    audioPlayer.processingStateStream.listen((state) {
+      if (state == ProcessingState.completed) {
+        if (isRepeating.value) {
+          // If repeating, play the same song again
+          playSong(uri: songs[playIndex.value].uri, index: playIndex.value);
+        } else {
+          _playNextSong();
+        }
       }
     });
   }
