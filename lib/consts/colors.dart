@@ -10,14 +10,14 @@ const Color glassWhite = Color.fromRGBO(232, 232, 232, 0.5882352941176471);
 
 //blue
 const Color primaryColor = Color.fromRGBO(117, 164, 231, 1.0);
-const Color secondaryColor = Color.fromRGBO(132, 189, 225, 1.0);
+const Color secondaryColor = Color.fromRGBO(148, 181, 224, 1.0);
 
 const Color bottomNavBarDisableColor = Color.fromRGBO(178, 210, 246, 1.0);
 
 const themeGradient = LinearGradient(
-    colors: [secondaryColor, primaryColor],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight);
+    colors: [white, secondaryColor, primaryColor],
+    begin: Alignment.center,
+    end: Alignment.bottomCenter);
 
 const bgGradient = LinearGradient(colors: [
   Color.fromRGBO(166, 166, 166, 0.49411764705882355),

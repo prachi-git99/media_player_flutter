@@ -17,7 +17,7 @@ class AudioPlayerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        decoration: const BoxDecoration(gradient: bgGradient),
+        decoration: const BoxDecoration(gradient: themeGradient),
         padding: const EdgeInsets.symmetric(horizontal: appHorizontalPadding),
         child: Column(
           children: [
@@ -58,6 +58,7 @@ class AudioPlayerScreen extends StatelessWidget {
               child: Obx(
                 () => Column(
                   children: [
+                    //song name
                     Text(
                       data[controller.playIndex.value].title,
                       overflow: TextOverflow.ellipsis,
@@ -68,6 +69,8 @@ class AudioPlayerScreen extends StatelessWidget {
                           weight: largeWeight),
                     ),
                     const SizedBox(height: smallMargin),
+
+                    //artist name
                     Text(data[controller.playIndex.value].artist.toString(),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -77,16 +80,19 @@ class AudioPlayerScreen extends StatelessWidget {
                           weight: mediumWeight,
                         )),
                     const SizedBox(height: smallMargin),
+
+                    //slider and times
                     Obx(
                       () => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("${controller.position.value}",
-                              style: customTextStyle(color: darkGrey)),
+                              style: customTextStyle(color: black)),
                           Expanded(
                               child: Slider(
                                   thumbColor: primaryColor,
                                   activeColor: primaryColor,
+                                  inactiveColor: white,
                                   min: const Duration(seconds: 0)
                                       .inSeconds
                                       .toDouble(),
@@ -98,25 +104,29 @@ class AudioPlayerScreen extends StatelessWidget {
                                     newValue = newValue;
                                   })),
                           Text("${controller.duration.value}",
-                              style: customTextStyle(color: darkGrey)),
+                              style: customTextStyle(color: black)),
                         ],
                       ),
                     ),
                     const SizedBox(height: smallMargin),
+
+                    //repeating icon
                     Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
                         icon: controller.isRepeating.value
                             ? const Icon(Icons.repeat_one,
-                                size: mediumIconSize, color: primaryColor)
+                                size: mediumIconSize, color: white)
                             : const Icon(Icons.repeat,
-                                size: mediumIconSize, color: primaryColor),
+                                size: mediumIconSize, color: white),
                         onPressed: () {
                           controller.isRepeating.value =
                               !controller.isRepeating.value;
                         },
                       ),
                     ),
+
+                    //play || pause|| previous||next
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -132,7 +142,7 @@ class AudioPlayerScreen extends StatelessWidget {
                             icon: const Icon(
                               Icons.skip_previous_rounded,
                               size: mediumIconSize,
-                              color: primaryColor,
+                              color: white,
                             )),
                         Obx(
                           () => IconButton(
@@ -148,12 +158,12 @@ class AudioPlayerScreen extends StatelessWidget {
                               icon: controller.isPlaying.value
                                   ? const Icon(
                                       Icons.pause_circle,
-                                      color: primaryColor,
+                                      color: white,
                                       size: 65.0,
                                     )
                                   : const Icon(
                                       Icons.play_circle_filled_rounded,
-                                      color: primaryColor,
+                                      color: white,
                                       size: 65.0,
                                     )),
                         ),
@@ -169,23 +179,27 @@ class AudioPlayerScreen extends StatelessWidget {
                             icon: const Icon(
                               Icons.skip_next_rounded,
                               size: mediumIconSize,
-                              color: primaryColor,
+                              color: white,
                             )),
                       ],
                     ),
-                    const SizedBox(height: 3 * largeMargin),
+                    const SizedBox(height: 2 * largeMargin),
+
+                    //music visualiser
                     Obx(() => controller.isPlaying.value
                         ? const MusicVisualizer(
                             barCount: 30,
-                            colors: [
-                              primaryColor,
-                              secondaryColor,
-                              primaryColor,
-                              secondaryColor,
-                            ],
+                            colors: [white, white, white, white],
                             duration: [900, 700, 600, 800, 500],
                           )
-                        : Container(color: primaryColor, height: 2))
+                        : SizedBox(
+                            height: size.height * 0.04,
+                            width: size.width,
+                            child: Image.asset(
+                              "assets/gifs/sound_wave.png",
+                              fit: BoxFit.cover,
+                              color: white,
+                            )))
                   ],
                 ),
               ),

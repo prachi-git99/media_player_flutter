@@ -1,0 +1,2 @@
+//
+// class VideoPlayerController extends GetxController {}

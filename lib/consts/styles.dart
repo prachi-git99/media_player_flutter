@@ -16,7 +16,7 @@ const navBarIconSize = 20.0;
 
 //margins and paddings
 const appHorizontalMargin = 15.0;
-const appHorizontalPadding = 15.0;
+const appHorizontalPadding = 12.0;
 const appVerticalPadding = 10.0;
 const appVerticalMargin = 15.0;
 

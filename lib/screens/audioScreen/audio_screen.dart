@@ -6,6 +6,8 @@ import 'package:media_player/controllers/audio_player_controller.dart';
 import 'package:media_player/screens/audioScreen/audioPlayerScreen/audio_player_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
+import '../../services/format_duration.dart';
+
 class AudioScreen extends StatefulWidget {
   const AudioScreen({Key? key}) : super(key: key);
 
@@ -19,7 +21,10 @@ class _AudioScreenState extends State<AudioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppbar(title: "Music", onSearch: () {}),
+      appBar: customAppbar(
+          leadingIcon: Icons.queue_music,
+          title: "Music Player",
+          onSearch: () {}),
       body: FutureBuilder<List<SongModel>>(
         future: controller.audioQuery.querySongs(
           sortType: null,
@@ -63,45 +68,48 @@ class _AudioScreenState extends State<AudioScreen> {
                             borderRadius:
                                 BorderRadius.circular(smallBorderRadius)),
                         child: Obx(
-                          () => ListTile(
-                            leading: QueryArtworkWidget(
-                              id: data[index].id,
-                              type: ArtworkType.AUDIO,
-                              nullArtworkWidget: const CircleAvatar(
-                                backgroundColor: primaryColor,
-                                child: Icon(Icons.music_note_rounded,
-                                    size: mediumIconSize, color: white),
+                          () {
+                            return ListTile(
+                              leading: QueryArtworkWidget(
+                                id: data[index].id,
+                                type: ArtworkType.AUDIO,
+                                nullArtworkWidget: const CircleAvatar(
+                                  backgroundColor: primaryColor,
+                                  child: Icon(Icons.music_note_rounded,
+                                      size: mediumIconSize, color: white),
+                                ),
                               ),
-                            ),
-                            title: Text(
-                              data[index].title,
-                              overflow: TextOverflow.ellipsis,
-                              style: customTextStyle(
-                                color: black,
-                                size: mediumFont,
+                              title: Text(
+                                data[index].title,
+                                overflow: TextOverflow.ellipsis,
+                                style: customTextStyle(
+                                    color: black,
+                                    size: mediumFont,
+                                    weight: mediumWeight),
                               ),
-                            ),
-                            subtitle: Text(
-                              "${data[index].artist ?? "Unknown Artist"}\n${controller.formatDuration(data[index].duration)}",
-                              style: customTextStyle(
-                                color: black,
-                                size: smallFont,
+                              subtitle: Text(
+                                "${data[index].artist ?? "Unknown Artist"}\n${formatDuration(data[index].duration)}",
+                                style: customTextStyle(
+                                  color: black,
+                                  size: smallFont,
+                                ),
                               ),
-                            ),
-                            trailing: controller.playIndex.value == index &&
-                                    controller.isPlaying.value
-                                ? Icon(
-                                    Icons.play_arrow,
-                                    color: primaryColor,
-                                    size: mediumIconSize,
-                                  )
-                                : null,
-                            onTap: () {
-                              Get.to(AudioPlayerScreen(data: data));
-                              controller.playSong(
-                                  uri: data[index].uri, index: index);
-                            },
-                          ),
+                              // tileColor: isSelected ? Colors.blue[100] : null,
+                              trailing: controller.playIndex.value == index &&
+                                      controller.isPlaying.value
+                                  ? const Icon(
+                                      Icons.play_arrow,
+                                      color: primaryColor,
+                                      size: mediumIconSize,
+                                    )
+                                  : null,
+                              onTap: () {
+                                Get.to(AudioPlayerScreen(data: data));
+                                controller.playSong(
+                                    uri: data[index].uri, index: index);
+                              },
+                            );
+                          },
                         ),
                       );
                     },
