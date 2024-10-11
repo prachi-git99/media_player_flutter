@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-import '../services/request_permission.dart';
-
 class AudioPlayerController extends GetxController {
   final OnAudioQuery audioQuery = OnAudioQuery();
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -22,10 +20,12 @@ class AudioPlayerController extends GetxController {
   late final RxList<SongModel> songs = <SongModel>[].obs;
   RxList<SongModel> selectedSongs = <SongModel>[].obs;
 
+  final RxList<SongModel> favoriteSongs = <SongModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();
-    requestPermissions();
+    // requestPermissions();
     _listenForSongCompletion();
   }
 
@@ -44,6 +44,20 @@ class AudioPlayerController extends GetxController {
   changeDurationToseconds(seconds) {
     var duration = Duration(seconds: seconds);
     audioPlayer.seek(duration);
+  }
+
+  void toggleFavorite(int index) {
+    SongModel song = songs[index];
+    if (favoriteSongs.contains(song)) {
+      favoriteSongs.remove(song);
+    } else {
+      favoriteSongs.add(song);
+    }
+  }
+
+  // Method to check if a song is a favorite
+  bool isFavorite(int index) {
+    return favoriteSongs.contains(songs[index]);
   }
 
   playSong({String? uri, required int index}) async {

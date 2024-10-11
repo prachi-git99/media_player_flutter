@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
           label_2, Icons.video_collection_outlined, controller, 1),
     ];
 
-    var navBody = [AudioScreen(), const VideoScreen()];
+    var navBody = [AudioScreen(), VideoScreen()];
 
     return WillPopScope(
       onWillPop: () async {

@@ -70,14 +70,18 @@ class _AudioScreenState extends State<AudioScreen> {
                         child: Obx(
                           () {
                             return ListTile(
-                              leading: QueryArtworkWidget(
-                                id: data[index].id,
-                                type: ArtworkType.AUDIO,
-                                nullArtworkWidget: const CircleAvatar(
-                                  backgroundColor: primaryColor,
-                                  child: Icon(Icons.music_note_rounded,
-                                      size: mediumIconSize, color: white),
-                                ),
+                              leading: Stack(
+                                children: [
+                                  QueryArtworkWidget(
+                                    id: data[index].id,
+                                    type: ArtworkType.AUDIO,
+                                    nullArtworkWidget: const CircleAvatar(
+                                      backgroundColor: primaryColor,
+                                      child: Icon(Icons.music_note_rounded,
+                                          size: mediumIconSize, color: white),
+                                    ),
+                                  ),
+                                ],
                               ),
                               title: Text(
                                 data[index].title,

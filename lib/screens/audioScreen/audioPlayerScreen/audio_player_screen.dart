@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:media_player/consts/consts.dart';
 import 'package:media_player/consts/text_style.dart';
 import 'package:media_player/controllers/audio_player_controller.dart';
-import 'package:music_visualizer/music_visualizer.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioPlayerScreen extends StatelessWidget {
@@ -15,7 +14,23 @@ class AudioPlayerScreen extends StatelessWidget {
     var controller = Get.find<AudioPlayerController>();
     controller.songs.assignAll(data);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          Obx(() {
+            bool isFavorite = controller.isFavorite(controller.playIndex.value);
+            return IconButton(
+                onPressed: () {
+                  controller.toggleFavorite(controller.playIndex.value);
+                },
+                icon: isFavorite
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : Icon(Icons.favorite_border_rounded, color: darkGrey));
+          })
+        ],
+      ),
       body: Container(
         decoration: const BoxDecoration(gradient: themeGradient),
         padding: const EdgeInsets.symmetric(horizontal: appHorizontalPadding),
@@ -54,6 +69,7 @@ class AudioPlayerScreen extends StatelessWidget {
             Expanded(
                 child: Container(
               padding: const EdgeInsets.all(mediumPadding),
+              margin: const EdgeInsets.only(top: mediumMargin),
               alignment: Alignment.center,
               child: Obx(
                 () => Column(
@@ -68,7 +84,7 @@ class AudioPlayerScreen extends StatelessWidget {
                           size: extraLargeFont,
                           weight: largeWeight),
                     ),
-                    const SizedBox(height: smallMargin),
+                    const SizedBox(height: mediumMargin),
 
                     //artist name
                     Text(data[controller.playIndex.value].artist.toString(),
@@ -79,52 +95,45 @@ class AudioPlayerScreen extends StatelessWidget {
                           size: mediumFont,
                           weight: mediumWeight,
                         )),
-                    const SizedBox(height: smallMargin),
+                    SizedBox(height: size.height * 0.1),
 
+                    //start time || repeating icon || end time
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("${controller.position.value}",
+                            style: customTextStyle(color: white)),
+                        IconButton(
+                          icon: controller.isRepeating.value
+                              ? const Icon(Icons.repeat_one,
+                                  size: mediumIconSize, color: white)
+                              : const Icon(Icons.repeat,
+                                  size: mediumIconSize, color: white),
+                          onPressed: () {
+                            controller.isRepeating.value =
+                                !controller.isRepeating.value;
+                          },
+                        ),
+                        Text("${controller.duration.value}",
+                            style: customTextStyle(color: white)),
+                      ],
+                    ),
                     //slider and times
                     Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("${controller.position.value}",
-                              style: customTextStyle(color: black)),
-                          Expanded(
-                              child: Slider(
-                                  thumbColor: primaryColor,
-                                  activeColor: primaryColor,
-                                  inactiveColor: white,
-                                  min: const Duration(seconds: 0)
-                                      .inSeconds
-                                      .toDouble(),
-                                  max: controller.max.value,
-                                  value: controller.value.value,
-                                  onChanged: (newValue) {
-                                    controller.changeDurationToseconds(
-                                        newValue.toInt());
-                                    newValue = newValue;
-                                  })),
-                          Text("${controller.duration.value}",
-                              style: customTextStyle(color: black)),
-                        ],
-                      ),
+                      () => Slider(
+                          thumbColor: primaryColor,
+                          activeColor: primaryColor,
+                          inactiveColor: white,
+                          min: const Duration(seconds: 0).inSeconds.toDouble(),
+                          max: controller.max.value,
+                          value: controller.value.value,
+                          onChanged: (newValue) {
+                            controller
+                                .changeDurationToseconds(newValue.toInt());
+                            newValue = newValue;
+                          }),
                     ),
                     const SizedBox(height: smallMargin),
-
-                    //repeating icon
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: controller.isRepeating.value
-                            ? const Icon(Icons.repeat_one,
-                                size: mediumIconSize, color: white)
-                            : const Icon(Icons.repeat,
-                                size: mediumIconSize, color: white),
-                        onPressed: () {
-                          controller.isRepeating.value =
-                              !controller.isRepeating.value;
-                        },
-                      ),
-                    ),
 
                     //play || pause|| previous||next
                     Row(
@@ -185,21 +194,21 @@ class AudioPlayerScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 2 * largeMargin),
 
-                    //music visualiser
-                    Obx(() => controller.isPlaying.value
-                        ? const MusicVisualizer(
-                            barCount: 30,
-                            colors: [white, white, white, white],
-                            duration: [900, 700, 600, 800, 500],
-                          )
-                        : SizedBox(
-                            height: size.height * 0.04,
-                            width: size.width,
-                            child: Image.asset(
-                              "assets/gifs/sound_wave.png",
-                              fit: BoxFit.cover,
-                              color: white,
-                            )))
+                    // //music visualiser
+                    // Obx(() => controller.isPlaying.value
+                    //     ? const MusicVisualizer(
+                    //         barCount: 30,
+                    //         colors: [white, white, white, white],
+                    //         duration: [900, 700, 600, 800, 500],
+                    //       )
+                    //     : SizedBox(
+                    //         height: size.height * 0.04,
+                    //         width: size.width,
+                    //         child: Image.asset(
+                    //           "assets/gifs/sound_wave.png",
+                    //           fit: BoxFit.cover,
+                    //           color: white,
+                    //         )))
                   ],
                 ),
               ),
